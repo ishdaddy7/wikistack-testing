@@ -2,9 +2,16 @@
 var expect = require('chai').expect;
 var chai = require('chai');
 var spies = require('chai-spies');
-var Page = require('../models').Page;
+var Model = require('../models');
+var Page = Model.Page;
+var User = Model.User;
+User.sync({force: true})
+  .then(function(){
+    Page.sync({force: true});
+  })
+  .catch(console.error);
+
 chai.use(spies);
-console.log("It's alive!!!!");
 
 describe("Addition Simple Test", function(){
   it("Adds shit", function(){
@@ -35,10 +42,6 @@ describe("Using spies", function(){
   })
 })
 describe("Page model tests", function(){
-  var page;
-  beforeEach(function(){
-      page = Page.build();
-    })
   // describe("Field tests", function(){
   //   describe("Testing title", function(){
   //     it("Should take a string and return it", function{
@@ -68,7 +71,11 @@ describe("Page model tests", function(){
 
   // }
 
-  describe("Getter tests", function(){
+/*  describe("Getter tests", function(){
+    var page;
+    beforeEach(function(){
+        page = Page.build();
+      })
     describe("Testing route", function(){
       it("Should prepend /wiki to urlTitle", function(){
         page.urlTitle = "very_silly_page";
@@ -83,7 +90,7 @@ describe("Page model tests", function(){
 
       })
     })
-  })
+  })*/
 
   describe("Class method tests", function(){
     beforeEach(function(done){
@@ -92,18 +99,19 @@ describe("Page model tests", function(){
         content: 'Lots of 1990s hip hop and R&B groups',
         tags: ['music', 'hip hop', 'R&B' ]
       })
-      .then(function(){done()})
+      .then(function(){
+        done()})
       .catch(done);
     })
     describe("Testing findByTag", function(){
 
-      it("Should return all pages and records containing a tag", function(){
+      it("Should return all pages and records containing a tag", function(done){
         Page.findByTag("music")
         .then(function(pages){
           expect(pages).to.have.lengthOf(1);
           done();
         }).catch(done);})
-      it("Should not get pages without the search tag", function(){
+      it("Should not get pages without the search tag", function(done){
         Page.findByTag("country")
         .then(function(pages){
           expect(pages).to.have.lengthOf(0);
@@ -119,46 +127,69 @@ describe("Page model tests", function(){
         content: 'a crazy pair o shoes',
         tags: ['laces','soles','clothes']
       })
-      .then(function(done){
+      .then(function(){
         Page.create({
           title: 'shirts',
           content: 'a crazy crazy shirt',
           tags: ['sleeves','tails','clothes']
         })
-        .then(function(done){
+        .then(function(){
           Page.create({
             title: 'cars',
             content: 'a fast fast car',
             tags: ['engine','doors','exhaust']
           })
-          .then(function(){done()})
+          .then(function(){done();})
           .catch(done);
         })
       })
     })
-    describe("Testing findSimliar", function(){
-      it("Should return all pages sharing a tag", function(){
+/*    afterEach(function(done){
+      User.sync({force: true})
+        .then(function(){
+          Page.sync({force: true});
+        })
+        .then(function(){done();})
+        .catch(done);
+    });*/
+
+    afterEach(function(done){
+      Page.destroy({
+        where: {
+          title: ['shoes','cars','shirts']
+        }
+      })
+        .then(function(){done();})
+        .catch(done)
+    });
+
+    describe("Testing findSimilar", function(){
+      it("Should return all pages sharing a tag", function(done){
         Page.findByTag('laces')
         .then(function(result){
-          result.findSimilar(function(result2){
-            expect(result2.title).to.be('shirts');
+          //console.log(result);
+          result[0].findSimilar()
+          .then(function(result2){
+            expect(result2[0].title).to.equal('shirts');
             done();
           })
         }).catch(done);
       })
-      it("Should not return itself", function(){
+      it("Should not return itself", function(done){
         Page.findByTag('laces')
         .then(function(result){
-          result.findSimilar(function(result2){
+          result[0].findSimilar()
+          .then(function(result2){
             expect(result2).to.have.lengthOf(1);
             done();
           })
         }).catch(done);
       })
-      it("Should not return pages with no similar tags", function(){
+      it("Should not return pages with no similar tags", function(done){
         Page.findByTag('engine')
         .then(function(result){
-          result.findSimilar(function(result2){
+          result[0].findSimilar()
+          .then(function(result2){
             expect(result2).to.have.lengthOf(0);
             done();
           })
