@@ -1,8 +1,10 @@
+/* DELETE ME ASAP
 // var supertest = require('supertest-as-promised')(require('../app'));
 var expect = require('chai').expect;
 var chai = require('chai');
 var spies = require('chai-spies');
 var Model = require('../models');
+
 var Page = Model.Page;
 var User = Model.User;
 User.sync({force: true})
@@ -14,13 +16,13 @@ User.sync({force: true})
 chai.use(spies);
 
 describe("Addition Simple Test", function(){
-  it("Adds shit", function(){
+  xit("Adds shit", function(){
     expect(2+2).to.equal(4);
   })
 });
 
 describe("setTimeout Async Test", function(){
-  it("Waits 1 second", function(done){
+  xit("Waits 1 second", function(done){
     var start = new Date();
     setTimeout(function(){
     var duration = new Date() - start;
@@ -32,7 +34,7 @@ describe("setTimeout Async Test", function(){
 });
 
 describe("Using spies", function(){
-  it("Spies on forEach", function(){
+  xit("Spies on forEach", function(){
     var arr = new Array(10);
     arr.fill(2);
     var daFunc = function(elem){return elem*50;}
@@ -42,34 +44,63 @@ describe("Using spies", function(){
   })
 })
 describe("Page model tests", function(){
-  // describe("Field tests", function(){
-  //   describe("Testing title", function(){
-  //     it("Should take a string and return it", function{
+  describe("Validation tests", function(){
+    describe("Testing title", function(){
+      xit("Should reject a null submission", function(done){
+      var page;
+      page = Page.build();
+        page.validate()
+        .then(function(err){
+          expect(err).to.exist;
+          expect(err.errors).to.exist;
+          expect(err.errors[0].path).to.equal('title');
+          done();
+        });
+      });
 
-  //     });
-  //     it("Should reject a null submission", function(){
+    })
+    describe("Testing content", function(){
 
-  //     });
-  //     it("Should return string output even for non-string input", function(){
+      xit("Should reject a null submission", function(done){
+      var page;
+      page = Page.build();
+        page.validate()
+        .then(function(err){
+          expect(err).to.exist;
+          expect(err.errors).to.exist;
+          expect(err.errors[2].path).to.equal('content');
+          done();
+        });
+      });
+    })
 
-  //     })
-  //   })
-  //   describe("Testing urlTitle", function(){
-  //     it("Should not have any spaces", function{
+    describe("Testing urlTitle", function(){
+//IT IS ODD THAT THIS WORKS, SHOULDN'T THERE BE AN AUTO GENERATED 5 DIGIT LONG URLTITLE B/C OF ELSE?
+      xit("Should reject a null submission", function(done){
+      //var page;
+      Page.create({
+        title: null
+      })
 
-  //     });
-  //     it("Should reject a null submission", function(){
+      //console.log('this is page ', page);
+        //page.validate()
+        .then(function(err){
+          //console.log('this is err.errors ', err.errors)
+          expect(err).to.exist;
+          expect(err.errors).to.exist;
+          expect(err.errors[1].path).to.equal('urlTitle');
+          done();
+        })
+        .catch(function(err){
+          console.log('this is err.errors ', err.errors);
+          console.
+          done();
+        });
+      });
+    })
 
-  //     });
-  //     it("Should match title but with _s", function(){
+  })
 
-  //     })
-  //     it("Should have only alphanumeric characters", function(){
-
-  //     })
-  //   })
-
-  // }
 
 /*  describe("Getter tests", function(){
     var page;
@@ -77,20 +108,23 @@ describe("Page model tests", function(){
         page = Page.build();
       })
     describe("Testing route", function(){
-      it("Should prepend /wiki to urlTitle", function(){
+      xit("Should prepend /wiki to urlTitle", function(){
         page.urlTitle = "very_silly_page";
         expect(page.route).to.equal("/wiki/very_silly_page");
       })
     })
     describe("Testing renderedContent", function(){
-      it("Should call marked", function(){
+      xit("Should call marked", function(){
 
       })
-      it("Should convert markdown to HTML", function(){
+      xit("Should convert markdown to HTML", function(){
 
       })
     })
   })*/
+
+
+/* DELETE ME ASAP
 
   describe("Class method tests", function(){
     beforeEach(function(done){
@@ -105,13 +139,13 @@ describe("Page model tests", function(){
     })
     describe("Testing findByTag", function(){
 
-      it("Should return all pages and records containing a tag", function(done){
+      xit("Should return all pages and records containing a tag", function(done){
         Page.findByTag("music")
         .then(function(pages){
           expect(pages).to.have.lengthOf(1);
           done();
         }).catch(done);})
-      it("Should not get pages without the search tag", function(done){
+      xit("Should not get pages without the search tag", function(done){
         Page.findByTag("country")
         .then(function(pages){
           expect(pages).to.have.lengthOf(0);
@@ -153,6 +187,8 @@ describe("Page model tests", function(){
         .catch(done);
     });*/
 
+
+/* DELETE ME ASAP
     afterEach(function(done){
       Page.destroy({
         where: {
@@ -164,7 +200,7 @@ describe("Page model tests", function(){
     });
 
     describe("Testing findSimilar", function(){
-      it("Should return all pages sharing a tag", function(done){
+      xit("Should return all pages sharing a tag", function(done){
         Page.findByTag('laces')
         .then(function(result){
           //console.log(result);
@@ -175,7 +211,7 @@ describe("Page model tests", function(){
           })
         }).catch(done);
       })
-      it("Should not return itself", function(done){
+      xit("Should not return itself", function(done){
         Page.findByTag('laces')
         .then(function(result){
           result[0].findSimilar()
@@ -185,7 +221,7 @@ describe("Page model tests", function(){
           })
         }).catch(done);
       })
-      it("Should not return pages with no similar tags", function(done){
+      xit("Should not return pages with no similar tags", function(done){
         Page.findByTag('engine')
         .then(function(result){
           result[0].findSimilar()
@@ -201,22 +237,23 @@ describe("Page model tests", function(){
 
   describe("Hooks", function(){
     describe("Testing beforeValidate hook",function(){
-      it("Should generate a random urlTitle for no urlTitle", function(){
+      xit("Should generate a random urlTitle for no urlTitle", function(){
 
       })
-      it("Should call random when generating title", function(){
+      xit("Should call random when generating title", function(){
 
       })
-      it("Should generate a 5 length substring", function(){
+      xit("Should generate a 5 length substring", function(){
 
       })
     })
   })
 
   describe("Pages having owners", function(){
-    it("Should have an authorId", function(){
+    xit("Should have an authorId", function(){
 
     })
   })
 })
 
+*/
